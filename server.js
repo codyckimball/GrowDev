@@ -14,7 +14,7 @@ router.get('/', function(req, res) {
 
 router.route('/characters')
 
-    .get(function(req, res) {
+    .get(function(req, response) {
         var listOfCharacters = [];
 
         var totalPagesWanted = 5
@@ -50,9 +50,9 @@ router.route('/characters')
                                });
                               break;
                           default:
-                              console.log('No Sort')
+                              sortValue = "None"
                       }
-                      console.log(listOfCharacters)
+                      response.send("<h1>Characters Sorted By " + sortValue + "</h1><div>" + JSON.stringify(listOfCharacters) + "</div>")
                 }
             })
         }
@@ -63,7 +63,7 @@ router.route('/characters')
 
 router.route('/planetresidents')
 
-    .get(function(req, res) {
+    .get(function(req, response) {
         var jsonData = {}
         var planetsDone = []
 
@@ -78,7 +78,6 @@ router.route('/planetresidents')
                     if(!planetsDone.includes(planet)){
 
                         planetsDone.push(planet)
-//                        console.log(planetsDone);
                         result.getHomeworld().then(function (res){
                             var name = res.name;
                             res.getResidents().then(function (residents){
@@ -87,7 +86,6 @@ router.route('/planetresidents')
                                     peepole.push(residents[resident].name)
                                 }
                                 jsonData[name] = peepole;
-//                                console.log(jsonData);
                             })
                         })
                     }
@@ -96,7 +94,7 @@ router.route('/planetresidents')
                         peopleID++;
                         getPlanetsFromPerson(peopleID);
                     } else {
-                        console.log(jsonData);
+                        response.send("<h1>Characters Per Home Planet</h1><div>" + JSON.stringify(jsonData) + "</div>")
                     }
                 }).catch(function (error) {
                      console.log(error);
